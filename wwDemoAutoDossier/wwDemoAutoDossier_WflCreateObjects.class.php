@@ -35,19 +35,21 @@ class wwDemoAutoDossier_WflCreateObjects extends WflCreateObjects_EnterpriseConn
 		
 		foreach ($req->Objects as $object) {
 		    if ($object->MetaData->BasicMetaData->Type ==  'Layout' || $object->MetaData->BasicMetaData->Type ==  'Article') {
-                $createdossier = true;
-                foreach ($object->Relations as $relation) {
-                    if ($relation->Type == 'Contained') {
-                        $createdossier = false;
-                        break;
-                    }
-                }
-                if ($createdossier) {
-                    $r = new Relation();
-                    $r->Type = 'Contained';
-                    $r->Parent = -1;
-                    $object->Relations[] = $r;
-                }                
+                if ($object->Relations) {
+					$createdossier = true;
+					foreach ($object->Relations as $relation) {
+						if ($relation->Type == 'Contained') {
+							$createdossier = false;
+							break;
+						}
+					}
+					if ($createdossier) {
+						$r = new Relation();
+						$r->Type = 'Contained';
+						$r->Parent = -1;
+						$object->Relations[] = $r;
+					}
+				}                
 		    }		
 		}
 		// TODO: Add your code that hooks into the service request.
